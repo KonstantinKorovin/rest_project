@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 
+import django_filters.rest_framework
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     "materials",
     "users",
     "rest_framework",
+    "django_filters",
 ]
 
 MIDDLEWARE = [
@@ -141,3 +143,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.CustomUser"
+
+REST_FRAMEWORK = {
+    "DEFAULT_FILTER_BACKENDS": (
+        "django_filters.rest_framework.DjangoFilterBackend",
+    ),
+}

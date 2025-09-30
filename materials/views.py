@@ -1,6 +1,4 @@
-from rest_framework import viewsets, generics
-from rest_framework.generics import get_object_or_404
-from rest_framework.response import Response
+from rest_framework import generics, viewsets
 
 from materials.models import Course, Lesson
 from materials.serializers import CourseSerializer, LessonSerializer
@@ -23,6 +21,7 @@ class CreateLesson(generics.CreateAPIView):
 class RetrieveLesson(generics.RetrieveAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
+
 
 class UpdateLesson(generics.UpdateAPIView):
     serializer_class = LessonSerializer
