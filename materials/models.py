@@ -9,6 +9,13 @@ class Course(models.Model):
         verbose_name="Фотография", upload_to="materials/photo/", blank=True, null=True
     )
     description = models.TextField(verbose_name="Описание курса", blank=True, null=True)
+    owner = models.ForeignKey(
+        to="users.CustomUser",
+        on_delete=models.CASCADE,
+        verbose_name="Владелец курса",
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return self.name
@@ -33,6 +40,13 @@ class Lesson(models.Model):
         to=Course,
         on_delete=models.CASCADE,
         related_name="lessons",
+        blank=True,
+        null=True,
+    )
+    owner = models.ForeignKey(
+        to="users.CustomUser",
+        on_delete=models.CASCADE,
+        verbose_name="Владелец урока",
         blank=True,
         null=True,
     )

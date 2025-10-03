@@ -62,6 +62,13 @@ class Payments(models.Model):
         choices=PAYMENT_METHODS,
         default=CASH,
     )
+    owner = models.ForeignKey(
+        to=CustomUser,
+        on_delete=models.CASCADE,
+        verbose_name="Плательщик",
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         verbose_name = "Платеж"
