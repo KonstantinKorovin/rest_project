@@ -2,12 +2,17 @@ from django_filters import CharFilter, FilterSet
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
 from rest_framework.filters import OrderingFilter
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from materials.permissions import ThreeTierAccessPermission
 from users.models import Payments
-from users.serializers import MyTokenObtainPairSerializer, PaymentSerializer
+from users.serializers import (
+    MyTokenObtainPairSerializer,
+    PaymentSerializer,
+    UserProfile,
+    UserSerializer,
+)
 
 
 class PaymentsFilter(FilterSet):
@@ -33,3 +38,16 @@ class PaymentsList(generics.ListAPIView):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+
+class UserCreate(generics.CreateAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+
+
+class UserProfileView(generics.RetrieveAPIView):
+    serializer_class = UserProfile
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
