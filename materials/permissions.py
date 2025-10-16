@@ -1,7 +1,7 @@
-from rest_framework.permissions import BasePermission
+from rest_framework import permissions
 
 
-class ThreeTierAccessPermission(BasePermission):
+class ThreeTierAccessPermission(permissions.BasePermission):
     """
     Общий permission для проверки является ли пользователь аутентифицированным,
     принадлежит ли он группе 'Managers',
@@ -10,21 +10,13 @@ class ThreeTierAccessPermission(BasePermission):
 
     def has_permission(self, request, view):
         user = request.user
-        is_manager = request.user.groups.filter(name="Managers").exists()
+        is_manager = user.groups.filter(name="Managers").exists()
 
         if not user.is_authenticated:
             return False
 
         if is_manager:
-            if view.action in ["create", "destroy"]:
-                return False
-            return True
-
-        if view.action == "list":
-            return True
-
-        if view.action == "create":
-            return True
+            return request.method not in ("POST", "DELETE")
 
         return True
 
@@ -33,6 +25,7 @@ class ThreeTierAccessPermission(BasePermission):
         is_manager = request.user.groups.filter(name="Managers").exists()
 
         if is_manager:
-            return True
+            if request.method in permissions.SAFE_METHODS:
+                return True
 
         return user == obj.owner

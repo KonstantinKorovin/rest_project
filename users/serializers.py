@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from materials.serializers import CourseSerializer
-from users.models import CustomUser, Payments
+from users.models import CustomUser, Payments, Subscription
 
 
 class PaymentSerializer(serializers.ModelSerializer):
@@ -40,3 +40,10 @@ class UserProfile(serializers.ModelSerializer):
         model = CustomUser
         fields = ["id", "email", "phone_number", "city", "avatar"]
         read_only_fields = fields
+
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Subscription
+        fields = "__all__"

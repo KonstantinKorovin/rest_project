@@ -1,15 +1,20 @@
+from django.shortcuts import get_object_or_404
 from django_filters import CharFilter, FilterSet
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+from materials.models import Course
 from materials.permissions import ThreeTierAccessPermission
-from users.models import Payments
+from users.models import Payments, Subscription
 from users.serializers import (
     MyTokenObtainPairSerializer,
     PaymentSerializer,
+    SubscriptionSerializer,
     UserProfile,
     UserSerializer,
 )
@@ -51,3 +56,27 @@ class UserProfileView(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class SubscriptionView(APIView):
+    serializer_class = SubscriptionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, *args, **kwargs):
+        user = self.request.user
+        course_id = self.request.data.get("course_id")
+        course_item = get_object_or_404(Course, pk=course_id)
+
+        subs_item = Subscription.objects.filter(user=user, course=course_item)
+
+        if subs_item.exists():
+            subs_item.delete()
+            message = "подписка удалена"
+            http_status = status.HTTP_200_OK
+
+        else:
+            Subscription.objects.create(user=user, course=course_item)
+            message = "подписка добавлена"
+            http_status = status.HTTP_201_CREATED
+
+        return Response({"message": message}, status=http_status)

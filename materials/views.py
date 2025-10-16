@@ -2,11 +2,13 @@ from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from materials.models import Course, Lesson
+from materials.paginators import CourseLessonPaginator
 from materials.permissions import ThreeTierAccessPermission
 from materials.serializers import CourseSerializer, LessonSerializer
 
 
 class CourseViewSet(viewsets.ModelViewSet):
+    pagination_class = CourseLessonPaginator
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
     permission_classes = [IsAuthenticated, ThreeTierAccessPermission]
@@ -16,6 +18,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 
 class ListLessons(generics.ListAPIView):
+    pagination_class = CourseLessonPaginator
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = [IsAuthenticated, ThreeTierAccessPermission]
