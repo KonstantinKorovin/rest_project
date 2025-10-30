@@ -9,14 +9,9 @@ class Course(models.Model):
         verbose_name="Фотография", upload_to="materials/photo/", blank=True, null=True
     )
     description = models.TextField(verbose_name="Описание курса", blank=True, null=True)
-    price = models.IntegerField(
-        default=0, verbose_name="Стоимость курса"
-    )
+    price = models.IntegerField(default=0, verbose_name="Стоимость курса")
     stripe_course_id = models.CharField(
-        max_length=50,
-        verbose_name="id_stripe",
-        blank=True,
-        null=True
+        max_length=50, verbose_name="id_stripe", blank=True, null=True
     )
     owner = models.ForeignKey(
         to="users.CustomUser",

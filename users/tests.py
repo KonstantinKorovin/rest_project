@@ -1,33 +1,27 @@
 from django.test import TestCase
+
 from materials.models import Course
-from users.models import Subscription
-from users.models import CustomUser
+from users.models import CustomUser, Subscription
 
 
 class SubscriptionModelTests(TestCase):
 
     def setUp(self):
         self.course_owner = CustomUser.objects.create_user(
-            email="owner@example.com",
-            password="test_password",
-            username="course_owner"
+            email="owner@example.com", password="test_password", username="course_owner"
         )
 
         self.subscriber = CustomUser.objects.create_user(
             email="subscriber@example.com",
             password="test_password",
-            username="subscriber"
+            username="subscriber",
         )
 
-        self.course = Course.objects.create(
-            name="Test Course",
-            owner=self.course_owner
-        )
+        self.course = Course.objects.create(name="Test Course", owner=self.course_owner)
 
     def test_subscription_creation(self):
         subscription = Subscription.objects.create(
-            user=self.subscriber,
-            course=self.course
+            user=self.subscriber, course=self.course
         )
 
         self.assertTrue(Subscription.objects.exists())
@@ -40,8 +34,7 @@ class SubscriptionModelTests(TestCase):
 
     def test_subscription_deletion(self):
         subscription = Subscription.objects.create(
-            user=self.subscriber,
-            course=self.course
+            user=self.subscriber, course=self.course
         )
         self.assertEqual(Subscription.objects.count(), 1)
 
