@@ -46,12 +46,13 @@ class CourseSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         stripe_response = create_course(
             course_name=validated_data["name"],
-            description=validated_data.get("description")
+            description=validated_data.get("description"),
         )
         if "id" not in stripe_response:
-            raise serializers.ValidationError({"stripe_error": "Не удалось создать продукт в Stripe."})
+            raise serializers.ValidationError(
+                {"stripe_error": "Не удалось создать продукт в Stripe."}
+            )
 
-        validated_data['stripe_course_id'] = stripe_response["id"]
+        validated_data["stripe_course_id"] = stripe_response["id"]
         course_instance = super().create(validated_data)
         return course_instance
-
