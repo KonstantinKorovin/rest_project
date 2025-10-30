@@ -190,3 +190,5 @@ class PaymentCancelView(generics.RetrieveAPIView):
             {"message": "Оплата отменена пользователем."},
             status=status.HTTP_400_BAD_REQUEST,
         )
+
+###########################
