@@ -53,7 +53,7 @@ class Payments(models.Model):
         to=Course, on_delete=models.CASCADE, related_name="courses"
     )
     lesson_payment = models.ForeignKey(
-        to=Lesson, on_delete=models.CASCADE, related_name="lessons"
+        to=Lesson, on_delete=models.CASCADE, related_name="lessons", blank=True, null=True
     )
     payment_amount = models.PositiveIntegerField(verbose_name="Сумма оплаты")
     payment_method = models.CharField(
@@ -69,6 +69,13 @@ class Payments(models.Model):
         blank=True,
         null=True,
     )
+    link_to_the_payment = models.CharField(
+        verbose_name="Ссылка на оплату", blank=True, null=True
+    )
+    stripe_session_id = models.CharField(
+        max_length=255, verbose_name="ID сессии Stripe", blank=True, null=True
+    )
+    is_paid = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Платеж"
