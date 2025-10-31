@@ -53,7 +53,7 @@ class Payments(models.Model):
         to=Course, on_delete=models.CASCADE, related_name="courses"
     )
     lesson_payment = models.ForeignKey(
-        to=Lesson, on_delete=models.CASCADE, related_name="lessons"
+        to=Lesson, on_delete=models.CASCADE, related_name="lessons", blank=True, null=True
     )
     payment_amount = models.PositiveIntegerField(verbose_name="Сумма оплаты")
     payment_method = models.CharField(

@@ -34,14 +34,7 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = [
-            "name",
-            "description",
-            "preview",
-            "lesson_count",
-            "lessons",
-            "is_subscribed",
-        ]
+        fields = "__all__"
 
     def create(self, validated_data):
         stripe_response = create_course(
