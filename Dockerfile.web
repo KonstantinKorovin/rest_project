@@ -10,6 +10,8 @@ COPY pyproject.toml poetry.lock ./
 
 RUN poetry install --no-root
 
+ENV PATH="/app/.venv/bin:$PATH"
+
 COPY . .
 
 EXPOSE 8000

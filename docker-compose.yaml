@@ -1,14 +1,22 @@
-version: "3.9"
-
 services:
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    container_name: "rest_project_nginx"
+    ports:
+      - "80:80"
+    depends_on:
+      - web
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.web
     container_name: "rest_project_web"
     env_file:
       - .env
     volumes:
       - .:/app
-      - /app/.venv
     depends_on:
       db:
         condition: service_healthy
@@ -16,7 +24,7 @@ services:
         condition: service_healthy
     ports:
       - "8000:8000"
-    command: "/app/.venv/bin/python manage.py runserver 0.0.0.0:8000"
+    command: [ "/app/.venv/bin/python", "manage.py", "runserver", "0.0.0.0:8000" ]
 
   db:
     image: postgres:16.0-alpine
@@ -44,31 +52,29 @@ services:
       timeout: 3s
       retries: 5
 
-  worker:
-    build: .
+  celery_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
     container_name: "rest_project_celery_worker"
     env_file:
       - .env
-    volumes:
-      - .:/app
-      - /app/.venv
     depends_on:
       redis:
         condition: service_healthy
-    command: "/app/.venv/bin/celery -A config worker -l info"
+    command: /app/.venv/bin/celery -A config worker -l info
 
   celery_beat:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.web
     container_name: "rest_project_celery_beat"
     env_file:
       - .env
-    volumes:
-      - .:/app
-      - /app/.venv
     depends_on:
       redis:
         condition: service_healthy
-    command: "/app/.venv/bin/celery -A config beat -l info"
+    command: /app/.venv/bin/celery -A config beat -l info
 
 volumes:
   postgres_data:
