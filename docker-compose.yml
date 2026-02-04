@@ -1,33 +1,31 @@
 services:
   nginx:
-    build:
-      context: .
-      dockerfile: Dockerfile.nginx
+    image: nginx:latest
     container_name: "rest_project_nginx"
     ports:
       - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro # Прокидываем конфиг
+      - ./static:/var/www/html/static
     depends_on:
       - web
+
   web:
     build:
       context: .
-      dockerfile: Dockerfile.web
+      dockerfile: Dockerfile
     container_name: "rest_project_web"
     env_file:
       - .env
-    volumes:
-      - .:/app
+    # Порт 8000 убираем из ports, он будет доступен внутри сети для Nginx
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
-    ports:
-      - "8000:8000"
-    command: [ "/app/.venv/bin/python", "manage.py", "runserver", "0.0.0.0:8000" ]
 
   db:
-    image: postgres:16.0-alpine
+    image: postgres:18.0-alpine
     container_name: "rest_project_db"
     env_file:
       - .env
@@ -43,9 +41,6 @@ services:
   redis:
     image: redis:7-alpine
     container_name: "rest_project_redis"
-    ports:
-      - "6379:6379"
-
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 1s
@@ -53,28 +48,24 @@ services:
       retries: 5
 
   celery_worker:
-    build:
-      context: .
-      dockerfile: Dockerfile.web
+    build: .
     container_name: "rest_project_celery_worker"
     env_file:
       - .env
+    command: celery -A config worker -l info # Путь изменен
     depends_on:
       redis:
         condition: service_healthy
-    command: /app/.venv/bin/celery -A config worker -l info
 
   celery_beat:
-    build:
-      context: .
-      dockerfile: Dockerfile.web
+    build: .
     container_name: "rest_project_celery_beat"
     env_file:
       - .env
+    command: celery -A config beat -l info # Путь изменен
     depends_on:
       redis:
         condition: service_healthy
-    command: /app/.venv/bin/celery -A config beat -l info
 
 volumes:
   postgres_data:
