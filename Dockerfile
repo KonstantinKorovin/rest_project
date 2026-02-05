@@ -18,11 +18,11 @@ WORKDIR /app
 COPY pyproject.toml poetry.lock /app/
 
 # Отключаем создание venv и ставим зависимости
-RUN poetry config virtualenvs.create false && \
-    poetry install --no-interaction --no-ansi --no-root
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-interaction --no-ansi --no-root
 
 # Копируем остальной код
 COPY . /app/
 
 # Запуск через Gunicorn
-CMD ["/root/.local/bin/gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]
+CMD ["python", "-m", "gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]
