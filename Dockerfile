@@ -25,4 +25,4 @@ RUN poetry config virtualenvs.create false \
 COPY . /app/
 
 # Запуск через Gunicorn
-CMD ["python", "-m", "gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]
+CMD ["poetry", "run", "gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]
