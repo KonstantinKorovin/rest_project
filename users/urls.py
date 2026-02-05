@@ -19,6 +19,6 @@ urlpatterns = [
     path("register/", UserCreate.as_view(), name="create-user"),
     path("my/profile/", UserProfileView.as_view(), name="my-profile"),
     path("my/subscription/", SubscriptionView.as_view(), name="my-subscription"),
-    path("payments/create/", PaymentsCreateView.as_view(), name="payments_create"),
+    path("payments/create/", PaymentsCreateView.as_view(), name="payments-create"),
     #  --  #
 ]

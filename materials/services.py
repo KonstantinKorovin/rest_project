@@ -53,7 +53,7 @@ def create_session(price_id, success_url, cancel_url):
     data = {
         "line_items[0][price]": price_id,
         "line_items[0][quantity]": 1,
-        "mode": "payment",
+        "mode": "subscription",
         "success_url": success_url,
         "cancel_url": cancel_url,
     }

@@ -5,6 +5,7 @@ from materials.models import Course, Lesson
 from materials.paginators import CourseLessonPaginator
 from materials.permissions import ThreeTierAccessPermission
 from materials.serializers import CourseSerializer, LessonSerializer
+from materials.tasks import send_update_notification_email
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -20,6 +21,17 @@ class CourseViewSet(viewsets.ModelViewSet):
         context = super().get_serializer_context()
         context["request"] = self.request
         return context
+
+    def perform_update(self, serializer):
+        updated_course = serializer.save()
+
+        if updated_course and updated_course.name:
+            send_update_notification_email.delay(
+                course_id=updated_course.id, course_name=updated_course.name
+            )
+            print(
+                f"Задача Celery на рассылку для курса {updated_course.name} поставлена в очередь."
+            )
 
 
 class ListLessons(generics.ListAPIView):
