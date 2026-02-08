@@ -21,8 +21,19 @@ jobs:
           script: |
             cd ~/rest_project 
 
+            # Обновляем код
             git fetch origin main
             git reset --hard origin/main
 
+            # 1. Останавливаем контейнеры
             sudo docker compose down
-            sudo docker compose up -d --build
+            
+            # 2. Очищаем неиспользуемые образы и кэш билда (чтобы убрать ошибку "already exists")
+            # Флаг -f делает это без подтверждения
+            sudo docker image prune -f
+
+            # 3. Собираем образы заново без использования старого кэша, если он битый
+            sudo docker compose build --no-cache
+
+            # 4. Поднимаем проект
+            sudo docker compose up -d
