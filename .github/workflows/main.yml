@@ -28,6 +28,9 @@ jobs:
   test:
     needs: lint
     runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      STRIPE: ${{ secrets.STRIPE }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -44,9 +47,6 @@ jobs:
         run: poetry install
 
       - name: Run Tests
-        env:
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          STRIPE: ${{ secrets.STRIPE }}
         run: poetry run python manage.py test
           # Добавь другие переменные окружения, если они нужны для тестов
 
