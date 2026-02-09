@@ -2,7 +2,6 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
-import django_filters.rest_framework
 from dotenv import load_dotenv
 
 load_dotenv()
