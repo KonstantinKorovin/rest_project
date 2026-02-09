@@ -44,10 +44,10 @@ jobs:
         run: poetry install
 
       - name: Run Tests
-        run: poetry run python manage.py test
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           STRIPE: ${{ secrets.STRIPE }}
+        run: poetry run python manage.py test
           # Добавь другие переменные окружения, если они нужны для тестов
 
   deploy:
