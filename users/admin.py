@@ -7,4 +7,3 @@ class UserAdmin(admin.ModelAdmin):
     fields = ("email", "phone_number", "city")
     search_fields = ("email", "city")
     ordering = ("email",)
-    
