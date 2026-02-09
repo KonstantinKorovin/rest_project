@@ -47,6 +47,7 @@ jobs:
         run: poetry run python manage.py test
         env:
           STRIPE: ${{ secrets.STRIPE }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
           # Добавь другие переменные окружения, если они нужны для тестов
 
   deploy:
